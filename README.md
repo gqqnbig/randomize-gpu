@@ -11,19 +11,18 @@ The GPU devices must be named `/dev/nvidia[0-9]#`. More than 10 GPUs are support
 
 ## Install
 
-1. Put `randomize-gpu` in a path of your desire, for instance the same path of SLURM configurations, `/etc/slurm-llnl/`.
-
-2. Add 
-
+1. Run the following
+```bash
+git clone --depth=1 https://github.com/gqqnbig/randomize-gpu/
+cat <<SERVICE > /etc/systemd/system/slurmd.service.d/randomize-gpu
+[Service]
+ExecStartPre=$PWD/randomize-gpu
+SERVICE
 ```
-ExecStartPre=/etc/slurm-llnl/randomize-gpu
-```
 
-in `slurmd.service`, assuming you are using systemctl to manage the service.
+2. Revise gres.conf to read `/dev/rNvidia[0-9]` instead of `/dev/nvidia[0-9]`. Change 9 to the actual number of your GPUs.
 
-3. Revise gres.conf to read `/dev/rNvidia[0-9]` instead of `/dev/nvidia[0-9]`. Change 9 to the actual number of your GPUs.
-
-4. Restart slurmd.
+3. Restart slurmd.
 
 ## Verify
 After installing (and you have restarted slurmd), you shall see rNvidia files in /dev. 
@@ -31,8 +30,8 @@ After installing (and you have restarted slurmd), you shall see rNvidia files in
 Submit a SLURM requesting multiple GPUs, you should see the job is not using GPUs of lowest IDs.
 
 ## Uninstall
-1. Delete `/etc/slurm-llnl/randomize-gpu`.
+1. Delete the local copy of this repository.
 
-2. Remove `ExecStartPre=/etc/slurm-llnl/randomize-gpu` in `slurmd.service`.
+2. Delete `/etc/systemd/system/slurmd.service.d/randomize-gpu`.
 
 3. Revise gres.conf to read `/dev/nvidia[0-9]`. Change 9 to the actual number of your GPUs.
