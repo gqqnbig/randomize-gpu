@@ -14,6 +14,10 @@ The GPU devices must be named `/dev/nvidia[0-9]#`. More than 10 GPUs are support
 1. Run the following
 ```bash
 git clone --depth=1 https://github.com/gqqnbig/randomize-gpu/
+cd randomize-gpu
+```
+Then run the following in a **root shell**.
+```bash
 cat <<SERVICE > /etc/systemd/system/slurmd.service.d/randomize-gpu.conf
 [Service]
 ExecStartPre=$PWD/randomize-gpu
